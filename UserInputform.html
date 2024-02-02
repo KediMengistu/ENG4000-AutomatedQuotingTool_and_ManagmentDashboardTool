@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quote Form</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container my-5">
+        <form id="createQuoteForm" class="card p-4" enctype="multipart/form-data">
+            <h2 class="mb-4">Quote Tool</h2>
+
+            <!-- 3D Model Upload Section -->
+            <div class="form-group">
+                <label for="file-upload" class="upload-box border border-primary rounded p-4 text-center">
+                    <div class="upload-icon mb-3">
+                        <!-- SVG or Font Awesome icon can be placed here -->
+                        <!-- For example, using Font Awesome 5 Cloud Upload Icon -->
+                        <!-- Icon placeholder (actual SVG data should be used) -->
+                        <svg width="50" height="43" viewBox="0 0 50 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Insert SVG path data -->
+                        </svg>
+                    </div>
+                    <h3 class="mb-3">Upload a 3D Model for Instant Quote.</h3>
+                    <p class="mb-3">STEP | OBJ | STL | 3MF | AMF files</p>
+                    <button type="button" class="btn btn-primary btn-upload" onclick="document.getElementById('file-upload').click();">Upload 3D Files</button>
+                    <input id="file-upload" type="file" name="file" style="display: none;" multiple>
+                </label>
+            </div>
+
+                        <div class="form-group">
+                <h3>Printing Type</h3>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="printing_type" value="FDM" onchange="updateFormVisibility()"> FDM
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="printing_type" value="SLA" onchange="updateFormVisibility()"> SLA
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group disabled-section" id="infillPercentageSection">
+                <h3>Infill Percentage (Only for FDM)</h3>
+                <label>Infill Percentage: <span id="infillPercentageValue">50</span>%</label>
+                <input type="range" class="custom-range" name="infill_percentage" id="infillPercentageSlider" min="0" max="100" value="50" onchange="updateInfillPercentageValue()">
+            </div>
+
+            <div class="form-group disabled-section" id="fillTypeSection">
+                <h3>Fill Type (Only for SLA)</h3>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="fill_type" value="SOLID"> Solid
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="fill_type" value="HOLLOW"> Hollow
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group disabled-section" id="materialSelectionSection">
+                <h3>Material Selection (Only for FDM)</h3>
+                <select class="custom-select" name="material">
+                    <option value="PLA">PLA</option>
+                    <option value="ABS">ABS</option>
+                    <!-- Add more materials as options here -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <h3>Layer Resolution</h3>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="layer_resolution" value="STANDARD"> Standard
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="layer_resolution" value="HIGH"> High
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="layer_resolution" value="DRAFT"> Draft
+                    </label>
+                </div>
+            </div>
+
+            <!-- Print Quantity Section -->
+            <div class="form-group">
+                <h3>Print Quantity</h3>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button" id="button-minus">-</button>
+                    </div>
+                        <input type="number" class="form-control" name="quantity" value="0" min="0" readonly>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-plus">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Color Selection Section -->
+            <div class="form-group">
+                <h3>Colors</h3>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="colour" value="WHITE" id="colorWhite">
+                    <label class="form-check-label" for="colorWhite">White</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="colour" value="BLACK" id="colorBlack">
+                    <label class="form-check-label" for="colorBlack">Black</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="colour" value="GREY" id="colorGrey">
+                    <label class="form-check-label" for="colorGrey">Grey</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="colour" value="CUSTOM" id="colorCustom">
+                    <label class="form-check-label" for="colorCustom">Custom</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="colour" value="NONE" id="colorNone">
+                    <label class="form-check-label" for="colorNone">None</label>
+                </div>
+            </div>
+
+            <!-- Fulfillment Time Section -->
+            <div class="form-group">
+                <h3>Fulfillment Time</h3>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="fulfillment_time" value="STANDARD" id="fulfillmentStandard">
+                    <label class="form-check-label" for="fulfillmentStandard">Standard</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="fulfillment_time" value="RUSH" id="fulfillmentRush">
+                    <label class="form-check-label" for="fulfillmentRush">Rush</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="fulfillment_time" value="NO_RUSH" id="fulfillmentNoRush">
+                    <label class="form-check-label" for="fulfillmentNoRush">No Rush</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="fulfillment_time" value="LIGHTNING_FAST" id="fulfillmentLightningFast">
+                    <label class="form-check-label" for="fulfillmentLightningFast">Lightning Fast</label>
+                </div>
+            </div>
+
+            <!-- Promo Code Section -->
+            <div class="form-group">
+                <h3>Promo Code</h3>
+                <input type="text" class="form-control" name="promo_code" placeholder="Enter promo code">
+            </div>
+
+            <!-- Discount Selection Section -->
+            <div class="form-group">
+                <h3>Discount Type</h3>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="discount_type" value="STUDENT_DISCOUNT" id="discountStudent">
+                    <label class="form-check-label" for="discountStudent">Student Discount</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="discount_type" value="BULK_ORDER_DISCOUNT" id="discountBulkOrder">
+                    <label class="form-check-label" for="discountBulkOrder">Bulk Order Discount</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="discount_type" value="STARTUP_DISCOUNT" id="discountStartup">
+                    <label class="form-check-label" for="discountStartup">Startup Discount</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="discount_type" value="PROMO_CODE_DISCOUNT" id="discountPromoCode">
+                    <label class="form-check-label" for="discountPromoCode">Promo Code Discount</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" name="discount_type" value="NONE" id="discountNone" checked>
+                    <label class="form-check-label" for="discountNone">None</label>
+                </div>
+            </div>
+
+            <!-- The rest of the form content, including Printing Type, Infill Percentage, Fill Type, etc. -->
+            <!-- Make sure to include all the other form sections as before -->
+
+            <button type="submit" class="btn btn-primary mt-4">Submit</button>
+        </form>
+    </div>
+
+    <!-- External JavaScript File -->
+    <script src="UserInputformBehavior.js"></script>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

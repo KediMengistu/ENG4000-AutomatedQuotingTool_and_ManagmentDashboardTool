@@ -1,0 +1,47 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+}
+
+#createQuoteForm {
+    background: #fff;
+    border-radius: 8px;
+}
+
+h2, h3 {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.disabled-section {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.upload-box {
+    background-color: #e9ecef;
+    border-dashed: 3px dashed #dee2e6;
+    position: relative;
+    cursor: pointer;
+}
+
+.upload-box .upload-icon {
+    margin: auto;
+    display: block;
+    width: 50px; /* Adjust size as necessary */
+}
+
+.upload-box h3,
+.upload-box p {
+    color: #6c757d;
+}
+
+.btn-upload {
+    text-transform: none;
+}
+
+/* Additional custom styling can go here */
+

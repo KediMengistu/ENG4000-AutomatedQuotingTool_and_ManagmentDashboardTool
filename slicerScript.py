@@ -93,12 +93,14 @@ def create_config_file(print_parameters, model_file_path):
 def execute_slicing(config_file_path, model_file_path):
     """
     Executes the slicing of the model and returns paths to the G-code and slice info files.
+    Tweaks the model orientation using Tweaker-3 before slicing.
     Args:
         config_file_path (str): Path to the configuration file.
         model_file_path (str): Path to the 3D model file.
     Returns:
         list: [Path to the G-code file, Path to the slice info text file]
     """
+
     gcode_output_dir = "C:\\Users\\KediM\\OneDrive\\Desktop\\ScriptGcodeOutput"
     slice_info_output_dir = "C:\\Users\\KediM\\OneDrive\\Desktop\\ScriptSliceInfoOutput"
     os.makedirs(gcode_output_dir, exist_ok=True)
@@ -108,11 +110,20 @@ def execute_slicing(config_file_path, model_file_path):
     gcode_file_path = os.path.join(gcode_output_dir, f"{model_name}.gcode")
     slice_info_file_path = os.path.join(slice_info_output_dir, f"{model_name}_slice_info.txt")
 
+    # Use Tweaker-3 to find the optimal orientation
+    tweaked_model_file_path = os.path.splitext(model_file_path)[0] + "_tweaked.stl"
+    tweaker_command = f"\"C:\\Users\\KediM\\PycharmProjects\\pythonProject\\.venv\\Scripts\\python.exe\" \"C:\\Users\\KediM\\PycharmProjects\\pythonProject\\.venv\\Lib\\site-packages\\tweaker3\\Tweaker.py\" -i \"{model_file_path}\" -o \"{tweaked_model_file_path}\" -vb -x"
+    subprocess.run(tweaker_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    # Adjust model_file_path to use the tweaked model
+    model_file_path = tweaked_model_file_path
+
     slicing_command = f"prusa-slicer-console.exe -g \"{model_file_path}\" --load \"{config_file_path}\" --output \"{gcode_file_path}\""
     with open(slice_info_file_path, "w") as file:
         subprocess.run(slicing_command, shell=True, stdout=file, stderr=subprocess.STDOUT)
 
     return [gcode_file_path, slice_info_file_path]
+
 
 
 # Function to check if the G-code file exists
@@ -165,52 +176,22 @@ def handle_gcode_generation_issue(model_file_path, print_parameters):
     # print_parameters['scale'] = scale_factor
 
 
-# Main execution
-# def main():
-#     model_file_path = get_model_file_path()
-#     config_file_path = get_print_config_file_path()
-#
-#     print_parameters = create_print_parameters_dict(config_file_path)
-#     model_info_path = extract_model_info(model_file_path)
-#
-#     config_file_created_path = create_config_file(print_parameters, model_file_path)
-#     gcode_file_path, slice_info_file_path = execute_slicing(config_file_created_path, model_file_path)
-#
-#     # In the main function, update the call like this:
-#     while not check_gcode_file_exists(gcode_file_path):
-#         handle_gcode_generation_issue(model_file_path, print_parameters)
-#         model_info_path = extract_model_info(model_file_path)
-#         config_file_created_path = create_config_file(print_parameters, model_file_path)
-#         gcode_file_path, slice_info_file_path = execute_slicing(config_file_created_path, model_file_path)
-#
-#
-#
-#     # Call to mass_retrieval function from slicerScript2
-#     mass_retrieval(model_info_path, slice_info_file_path, gcode_file_path)
-
-
 def main():
     model_file_path = get_model_file_path()
     config_file_path = get_print_config_file_path()
 
-    # Use Tweaker-3 to find the optimal orientation
-    # The following command assumes Tweaker outputs the optimized model to a new file
-    tweaked_model_file_path = os.path.splitext(model_file_path)[0] + "_tweaked.stl"
-    tweaker_command = f"\"C:\\Users\\KediM\\PycharmProjects\\pythonProject\\.venv\\Scripts\\python.exe\" \"C:\\Users\\KediM\\PycharmProjects\\pythonProject\\.venv\\Lib\\site-packages\\tweaker3\\Tweaker.py\" -i \"{model_file_path}\" -o \"{tweaked_model_file_path}\" -vb -x"
-    subprocess.run(tweaker_command, shell=True)
-
-    # Continue with the rest of your script using the tweaked model file
+    # Call execute_slicing which includes Tweaker-3 command
     print_parameters = create_print_parameters_dict(config_file_path)
-    model_info_path = extract_model_info(tweaked_model_file_path)
+    model_info_path = extract_model_info(model_file_path)
+    config_file_created_path = create_config_file(print_parameters, model_file_path)
+    gcode_file_path, slice_info_file_path = execute_slicing(config_file_created_path, model_file_path)
 
-    config_file_created_path = create_config_file(print_parameters, tweaked_model_file_path)
-    gcode_file_path, slice_info_file_path = execute_slicing(config_file_created_path, tweaked_model_file_path)
-
+    # Check for G-code file existence and handle any issues
     while not check_gcode_file_exists(gcode_file_path):
-        handle_gcode_generation_issue(tweaked_model_file_path, print_parameters)
-        model_info_path = extract_model_info(tweaked_model_file_path)
-        config_file_created_path = create_config_file(print_parameters, tweaked_model_file_path)
-        gcode_file_path, slice_info_file_path = execute_slicing(config_file_created_path, tweaked_model_file_path)
+        handle_gcode_generation_issue(model_file_path, print_parameters)
+        model_info_path = extract_model_info(model_file_path)
+        config_file_created_path = create_config_file(print_parameters, model_file_path)
+        gcode_file_path, slice_info_file_path = execute_slicing(config_file_created_path, model_file_path)
 
     # Call to mass_retrieval function
     mass_retrieval(model_info_path, slice_info_file_path, gcode_file_path)
