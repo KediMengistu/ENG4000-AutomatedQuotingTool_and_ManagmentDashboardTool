@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FDM Print Admin Profile Settings</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='fdm_profile_form.css') }}">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 class="text-center mb-4">FDM Print Admin Profile Settings</h2>
+        <form action="/submit-fdm-profile-settings" method="post" class="form-container">
+            <!-- Units Section -->
+            <div class="form-group">
+                <label for="printUnits">Units:</label>
+                <select class="form-control" id="printUnits" name="printUnits">
+                    <option value="Millimeters">Millimeters</option>
+                    <option value="Centimeters">Centimeters</option>
+                    <option value="Inches">Inches</option>
+                </select>
+            </div>
+
+            <!-- Max Dimensions Section -->
+            <h4 class="section-title">Max Dimensions</h4>
+            <div class="form-group">
+                <label for="maxXDimension">Max X Dimension:</label>
+                <input type="number" class="form-control" id="maxXDimension" name="maxXDimension" step="any">
+            </div>
+            <div class="form-group">
+                <label for="maxYDimension">Max Y Dimension:</label>
+                <input type="number" class="form-control" id="maxYDimension" name="maxYDimension" step="any">
+            </div>
+            <div class="form-group">
+                <label for="maxZDimension">Max Z Dimension:</label>
+                <input type="number" class="form-control" id="maxZDimension" name="maxZDimension" step="any">
+            </div>
+
+            <!-- Volume & Min Dimension Section -->
+            <h4 class="section-title">Volume & Minimum Dimension</h4>
+            <div class="form-group">
+                <label for="maxVolume">Max Volume:</label>
+                <input type="number" class="form-control" id="maxVolume" name="maxVolume" step="any">
+            </div>
+            <div class="form-group">
+                <label for="minDimension">Min Dimension:</label>
+                <input type="number" class="form-control" id="minDimension" name="minDimension" step="any">
+            </div>
+
+            <!-- Layer Height Options Section -->
+            <h4 class="section-title">Layer Height Options</h4>
+            <div class="form-group">
+                <label for="layerHeightOp1">Layer Height Option 1:</label>
+                <input type="number" class="form-control" id="layerHeightOp1" name="layerHeightOp1" step="any">
+            </div>
+            <div class="form-group">
+                <label for="layerHeightOp2">Layer Height Option 2:</label>
+                <input type="number" class="form-control" id="layerHeightOp2" name="layerHeightOp2" step="any">
+            </div>
+            <div class="form-group">
+                <label for="layerHeightOp3">Layer Height Option 3:</label>
+                <input type="number" class="form-control" id="layerHeightOp3" name="layerHeightOp3" step="any">
+            </div>
+
+            <!-- Additional FDM Settings Section -->
+            <h4 class="section-title">Additional FDM Settings</h4>
+            <div class="form-group">
+                <label for="lineWidth">Line Width:</label>
+                <input type="number" class="form-control" id="lineWidth" name="lineWidth" step="any">
+            </div>
+            <div class="form-group">
+                <label for="wallCount">Wall Count:</label>
+                <input type="number" class="form-control" id="wallCount" name="wallCount">
+            </div>
+            <div class="form-group">
+                <label for="topSurfacesCount">Top Surfaces Count:</label>
+                <input type="number" class="form-control" id="topSurfacesCount" name="topSurfacesCount">
+            </div>
+            <div class="form-group">
+                <label for="bottomSurfacesCount">Bottom Surfaces Count:</label>
+                <input type="number" class="form-control" id="bottomSurfacesCount" name="bottomSurfacesCount">
+            </div>
+            <div class="form-group">
+                <label for="infillWallPercentage">Infill Wall Percentage:</label>
+                <input type="number" class="form-control" id="infillWallPercentage" name="infillWallPercentage" step="any">
+            </div>
+            <div class="form-group">
+                <label for="minimumInfillPercentage">Minimum Infill Percentage:</label>
+                <input type="number" class="form-control" id="minimumInfillPercentage" name="minimumInfillPercentage" step="any">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Save Settings</button>
+        </form>
+    </div>
+
+    <!-- Include Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='fdm_profile_form.js') }}"></script>
+</body>
+</html>
