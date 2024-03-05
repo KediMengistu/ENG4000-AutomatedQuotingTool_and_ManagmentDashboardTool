@@ -8,9 +8,9 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <!-- Ensure your user_input_form.css link is correct -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='user_input_form.css') }}">
+    <!--<link rel="stylesheet" href="{{ url_for('static', filename='user_input_form.css') }}">-->
     <link rel="stylesheet" href="user_input_form.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -194,6 +194,9 @@
                         <div id="fileNameDisplay" class="text-center file-name-display">
                             <!-- Uploaded file name will be displayed here -->
                         </div>
+
+                        <!-- Server Response Display -->
+                        <div id="responseDisplay" class="text-center response-display"></div>
 
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>

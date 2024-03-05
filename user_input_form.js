@@ -109,38 +109,66 @@ function displayModel(file) {
 
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('quoteForm');
-    form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
+form.addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
 
-        // Collect form data
-        const formData = new FormData(form);
-        const formObject = {};
-        formData.forEach(function(value, key){
-            formObject[key] = value;
-        });
+    const formData = new FormData(form);
+    const fileInput = document.getElementById('userFile');
+    if (fileInput.files.length > 0) {
+        formData.append('stl_file', fileInput.files[0]);
+    }
 
-        // Include code to handle file uploads in 'formObject' if necessary
-        // For example, handling the 'user_file' field if it's meant to be sent as part of the request
+    // Debugging: Log each key-value pair in the FormData
+    for (let [key, value] of formData.entries()) {
+        console.log('FormData key-value pair:', key, value);
+    }
 
-        // Send the collected form data as a POST request to the server
-        fetch('http://localhost:3000/api/create-quote', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // Add any other headers your API requires
-            },
-            body: JSON.stringify(formObject) // Convert the form data object to a JSON string
-        }).then(response => {
-            if (response.ok) {
-                return response.json(); // or 'response.text()' if the response is plain text
+    const bearerToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvaG4uZG9lIiwiZW1haWwiOiJKb2huQGdtYWlsLmNvbSIsInVzZXJfaWQiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwOTMxNjAwMSwiZXhwIjoxNzA5MzI2ODAxfQ.NuHjzRY4oO8UA5PJ29x55qHROdNxcCe4fsgFm8W9-4U';
+
+    axios.post('http://52.14.171.52:3000/api/create-quote', formData, {
+        headers: {
+            'Authorization': `Bearer ${bearerToken}`,
+            // 'Accept' and 'Accept-Language' can be set as needed
+            'Accept': 'application/json',
+            'Accept-Language': 'en-US,en;q=0.8',
+            // Do not manually set 'Content-Type' for multipart/form-data
+        },
+    })
+
+
+        // axios({
+        //     method: 'post',
+        //     url: 'http://52.14.171.52:3000/api/create-quote',
+        //     data: formData,
+        //     headers: {
+        //         'Authorization': `Bearer ${bearerToken}`,
+        //         //'Content-Type': 'multipart/form-data'
+        //     },
+        // })
+        .then(function(response) {
+            console.log('Raw response:', response);
+            // Update the UI with the server response
+            const responseDisplay = document.getElementById('responseDisplay');
+            responseDisplay.textContent = "Response: " + JSON.stringify(response.data);
+        })
+        .catch(function(error) {
+            console.error('Axios request failed: ', error.toJSON());
+            const responseDisplay = document.getElementById('responseDisplay');
+            if(error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                responseDisplay.textContent = "Error: " + JSON.stringify(error.response.data);
+            } else if(error.request) {
+                // The request was made but no response was received
+                responseDisplay.textContent = "Error: The request was made but no response was received";
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                responseDisplay.textContent = "Error: " + error.message;
             }
-            throw new Error('Network response was not ok.');
-        }).then(data => {
-            console.log(data); // Handle success
-            // Optionally redirect the user or display a success message
-        }).catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-            // Handle errors or display an error message to the user
         });
     });
 });
+
+
+
+
